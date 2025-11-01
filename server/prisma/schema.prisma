@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model State {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  code      String     @unique
+  districts District[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("states")
+}
+
+model District {
+  id        String         @id @default(uuid())
+  name      String
+  code      String
+  stateId   String
+  state     State          @relation(fields: [stateId], references: [id])
+  data      DistrictData[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@unique([stateId, name])
+  @@map("districts")
+}
+
+model DistrictData {
+  id                          String   @id @default(uuid())
+  districtId                  String
+  district                    District @relation(fields: [districtId], references: [id])
+  financialYear               String
+  month                       String?
+  
+  // Job Cards
+  totalJobCardsIssued         Int      @default(0)
+  totalWorkers                Int      @default(0)
+  activeJobCards              Int      @default(0)
+  activeWorkers               Int      @default(0)
+  
+  // Employment
+  totalHouseholdsWorked       Int      @default(0)
+  totalPersonDaysGenerated    BigInt   @default(0)
+  womenPersonDaysGenerated    BigInt   @default(0)
+  scPersonDaysGenerated       BigInt   @default(0)
+  stPersonDaysGenerated       BigInt   @default(0)
+  
+  // Financial
+  approvedLabourBudget        Float    @default(0)
+  totalExpenditure            Float    @default(0)
+  wageExpenditure             Float    @default(0)
+  materialExpenditure         Float    @default(0)
+  adminExpenditure            Float    @default(0)
+  
+  // Works
+  totalWorksCompleted         Int      @default(0)
+  totalWorksOngoing           Int      @default(0)
+  averageWagePerDay           Float    @default(0)
+  
+  // Payments
+  ftosGenerated               Int      @default(0)
+  totalPaymentsMade           Float    @default(0)
+  
+  // Metadata
+  dataSource                  String   @default("api")
+  lastSyncedAt                DateTime @default(now())
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  @@unique([districtId, financialYear, month])
+  @@index([districtId, financialYear])
+  @@map("district_data")
+}
+
+model SyncLog {
+  id          String   @id @default(uuid())
+  syncType    String   // 'full' or 'incremental'
+  status      String   // 'success', 'failed', 'partial'
+  recordCount Int      @default(0)
+  errorMsg    String?
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+
+  @@map("sync_logs")
+}
