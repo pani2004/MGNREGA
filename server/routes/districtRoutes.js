@@ -1,18 +1,18 @@
 import express from 'express';
-import districtController from '../controllers/districtController.js';
+import { getAllStates, getDistrictsByState, getDistrictById, searchDistricts } from '../controllers/districtController.js';
 
 const router = express.Router();
 
 // Get all states
-router.get('/states', districtController.getAllStates.bind(districtController));
+router.get('/states', getAllStates);
 
 // Get districts by state
-router.get('/states/:stateId/districts', districtController.getDistrictsByState.bind(districtController));
+router.get('/states/:stateId/districts', getDistrictsByState);
 
 // Get district by ID
-router.get('/:districtId', districtController.getDistrictById.bind(districtController));
+router.get('/:districtId', getDistrictById);
 
 // Search districts
-router.get('/search', districtController.searchDistricts.bind(districtController));
+router.get('/search', searchDistricts);
 
 export default router;
