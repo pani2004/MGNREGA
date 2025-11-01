@@ -1,6 +1,7 @@
 import { ArrowRight, Users, TrendingUp, MapPin, Languages, BarChart3, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import Footer from '../components/Footer';
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -181,24 +182,7 @@ function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center">
-            <p className="text-gray-400">
-              {t(
-                '© 2025 MGNREGA Dashboard. Data sourced from data.gov.in',
-                '© 2025 मनरेगा डैशबोर्ड। डेटा data.gov.in से प्राप्त'
-              )}
-            </p>
-            <button
-              onClick={() => navigate('/admin')}
-              className="text-gray-400 hover:text-white transition-colors text-sm"
-            >
-              {t('Admin Panel', 'एडमिन पैनल')}
-            </button>
-          </div>
-        </div>
-      </footer>
+      <Footer/>
     </div>
   );
 }
